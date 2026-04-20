@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Release Notes — TurfTrack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green: #0d2b1a;
+    --green-mid: #14381f;
+    --green-light: #1e4f2c;
+    --gold: #c9a84c;
+    --gold-light: #e4c06e;
+    --white: #f7f4ed;
+    --text-muted: rgba(247,244,237,0.6);
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--green); color: var(--white); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(13,43,26,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+  .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-brand img { width: 34px; height: 34px; border-radius: 8px; }
+  .nav-brand span { font-family: var(--serif); font-size: 1.15rem; letter-spacing: 0.04em; color: var(--white); }
+  .nav-links { display: flex; align-items: center; gap: 2rem; }
+  .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--white); }
+  .nav-cta {
+    background: var(--gold); color: var(--green);
+    padding: 0.55rem 1.4rem; border-radius: 8px;
+    font-size: 0.88rem; font-weight: 500; text-decoration: none;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--gold-light); }
+
+  /* PAGE HEADER */
+  .page-header {
+    padding: 7rem 2rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(201,168,76,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .page-header .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold);
+    font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 5px 14px; border-radius: 20px; margin-bottom: 1.2rem;
+  }
+  .page-header h1 {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 600; line-height: 1.15;
+    margin-bottom: 0.85rem;
+  }
+  .page-header p {
+    font-size: 1rem; color: var(--text-muted); max-width: 480px;
+    margin: 0 auto; line-height: 1.7;
+  }
+
+  /* LAYOUT */
+  .rn-layout {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  /* SIDEBAR */
+  .rn-sidebar {
+    position: sticky;
+    top: 88px;
+  }
+  .rn-sidebar-label {
+    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--gold); font-weight: 500; margin-bottom: 1rem;
+  }
+  .rn-sidebar-list { list-style: none; }
+  .rn-sidebar-list li { margin-bottom: 0.1rem; }
+  .rn-sidebar-list a {
+    display: block;
+    padding: 0.55rem 0.85rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+    border-left: 2px solid transparent;
+  }
+  .rn-sidebar-list a:hover {
+    background: rgba(201,168,76,0.08);
+    border-left-color: rgba(201,168,76,0.4);
+  }
+  .rn-sidebar-list a.current {
+    background: rgba(201,168,76,0.1);
+    border-left-color: var(--gold);
+  }
+  .rn-sidebar-build {
+    font-size: 0.88rem; font-weight: 500; color: var(--white);
+    display: block;
+  }
+  .rn-sidebar-date {
+    font-size: 0.75rem; color: var(--text-muted);
+    display: block; margin-top: 1px;
+  }
+
+  /* LEGEND */
+  .rn-legend {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  .rn-legend-label {
+    font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); font-weight: 500; margin-bottom: 0.75rem;
+  }
+  .rn-legend-item {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 0.5rem;
+  }
+  .rn-legend-item span:first-child { font-size: 14px; }
+  .rn-legend-item span:last-child { font-size: 0.78rem; color: var(--text-muted); }
+
+  /* BUILD ENTRIES */
+  .rn-feed { display: flex; flex-direction: column; gap: 2.5rem; }
+
+  .build-entry {
+    background: var(--green-light);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 20px;
+    overflow: hidden;
+    scroll-margin-top: 96px;
+  }
+  .build-entry.latest {
+    border-color: rgba(201,168,76,0.4);
+  }
+  .build-entry.latest::before {
+    content: '';
+    display: block; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .build-header {
+    padding: 1.75rem 2rem 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .build-header-left {}
+  .build-number {
+    font-family: var(--serif);
+    font-size: 1.5rem; font-weight: 600;
+    color: var(--white); margin-bottom: 0.25rem;
+  }
+  .build-meta {
+    display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+  }
+  .build-date {
+    font-size: 0.82rem; color: var(--text-muted);
+  }
+  .build-platform {
+    font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase;
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-muted); padding: 3px 10px; border-radius: 20px;
+  }
+  .build-badge-new {
+    background: var(--gold); color: var(--green);
+    font-size: 0.72rem; font-weight: 600; padding: 4px 12px; border-radius: 20px;
+    letter-spacing: 0.05em; text-transform: uppercase; align-self: flex-start;
+  }
+  .build-summary {
+    font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;
+    margin-top: 0.6rem; max-width: 540px;
+  }
+
+  /* STATS ROW */
+  .build-stats {
+    display: flex; gap: 1.5rem;
+    padding: 0.85rem 2rem;
+    background: rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    flex-wrap: wrap;
+  }
+  .build-stat {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.78rem; color: var(--text-muted);
+  }
+  .build-stat-icon { font-size: 13px; }
+  .build-stat strong { color: var(--white); font-weight: 500; }
+
+  /* ITEMS */
+  .build-items { padding: 1.5rem 2rem; }
+
+  .rn-group { margin-bottom: 1.75rem; }
+  .rn-group:last-child { margin-bottom: 0; }
+  .rn-group-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 0.85rem;
+  }
+  .rn-group-icon { font-size: 15px; }
+  .rn-group-title {
+    font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .rn-group-title.new-feat { color: #7ecf8a; }
+  .rn-group-title.enhancement { color: var(--gold); }
+  .rn-group-title.improvement { color: #89c4e1; }
+  .rn-group-title.bug-fix { color: #e89595; }
+
+  .rn-items-list { list-style: none; }
+  .rn-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.9rem; color: var(--text-muted); line-height: 1.55;
+  }
+  .rn-item:last-child { border-bottom: none; }
+  .rn-item-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    flex-shrink: 0; margin-top: 7px;
+  }
+  .rn-item-dot.new-feat { background: #7ecf8a; }
+  .rn-item-dot.enhancement { background: var(--gold); }
+  .rn-item-dot.improvement { background: #89c4e1; }
+  .rn-item-dot.bug-fix { background: #e89595; }
+
+  /* FOOTER */
+  footer {
+    background: #080f0a; padding: 3rem 2rem;
+    text-align: center; border-top: 1px solid rgba(201,168,76,0.1);
+  }
+  footer .brand { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 1rem; }
+  footer .brand img { width: 28px; height: 28px; border-radius: 6px; }
+  footer .brand span { font-family: var(--serif); font-size: 1rem; color: var(--white); }
+  footer p { font-size: 0.82rem; color: var(--text-muted); }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.25rem; }
+    .nav-links { display: none; }
+    .rn-layout { grid-template-columns: 1fr; }
+    .rn-sidebar { position: static; display: flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap; }
+    .rn-legend { margin-top: 0; padding-top: 0; border-top: none; }
+    .build-header { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="index.html">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAB+UlEQVR4nO2Wv0sDMRTHP6s4iQ4OouAgOIiDgwTBQRAcBAdBEARBEARBEBwEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRA=" alt="TurfTrack">
+    <span>TurfTrack</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html#features">Features</a>
+    <a href="index.html#pricing">Pricing</a>
+    <a href="release-notes.html" class="active">Release Notes</a>
+  </div>
+  <a href="#" class="nav-cta">Download on iOS</a>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="eyebrow">📋 What's New</div>
+  <h1>Release Notes</h1>
+  <p>Every improvement, fix, and new feature — updated with each TestFlight build. Your feedback shapes every release.</p>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="rn-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="rn-sidebar">
+    <div class="rn-sidebar-label">Builds</div>
+    <ul class="rn-sidebar-list">
+      <li>
+        <a href="#build-13" class="current">
+          <span class="rn-sidebar-build">Build 13</span>
+          <span class="rn-sidebar-date">Apr 20, 2026</span>
+        </a>
+      </li>
+      <li>
+        <a href="#build-12">
+          <span class="rn-sidebar-build">Build 12</span>
+          <span class="rn-sidebar-date">Apr 18, 2026</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="rn-legend">
+      <div class="rn-legend-label">Legend</div>
+      <div class="rn-legend-item"><span>🌱</span><span>New Feature</span></div>
+      <div class="rn-legend-item"><span>✨</span><span>Enhancement</span></div>
+      <div class="rn-legend-item"><span>⚙️</span><span>UI Improvement</span></div>
+      <div class="rn-legend-item"><span>🐛</span><span>Bug Fix</span></div>
+    </div>
+  </aside>
+
+  <!-- FEED -->
+  <div class="rn-feed">
+
+    <!-- BUILD 13 -->
+    <article class="build-entry latest" id="build-13">
+      <div class="build-header">
+        <div class="build-header-left">
+          <div class="build-number">Build 1.0.0 (13)</div>
+          <div class="build-meta">
+            <span class="build-date">April 20, 2026</span>
+            <span class="build-platform">iOS · TestFlight</span>
+          </div>
+          <p class="build-summary">A big quality-of-life release — smarter onboarding, polished UI throughout, and a round of targeted fixes based on early tester feedback.</p>
+        </div>
+        <div class="build-badge-new">Latest</div>
+      </div>
+
+      <div class="build-stats">
+        <div class="build-stat"><span class="build-stat-icon">✨</span><strong>4</strong>&nbsp;Enhancements</div>
+        <div class="build-stat"><span class="build-stat-icon">⚙️</span><strong>8</strong>&nbsp;UI Improvements</div>
+        <div class="build-stat"><span class="build-stat-icon">🐛</span><strong>7</strong>&nbsp;Bug Fixes</div>
+        <div class="build-stat"><span class="build-stat-icon">🔧</span><strong>1</strong>&nbsp;Technical</div>
+      </div>
+
+      <div class="build-items">
+
+        <div class="rn-group">
+          <div class="rn-group-header">
+            <span class="rn-group-icon">✨</span>
+            <span class="rn-group-title enhancement">Enhancements</span>
+          </div>
+          <ul class="rn-items-list">
+            <li class="rn-item"><span class="rn-item-dot enhancement"></span>You can now add nitrogen content when entering products during onboarding — helping the app give you more accurate lawn care recommendations from day one.</li>
+            <li class="rn-item"><span class="rn-item-dot enhancement"></span>Added a quick link on the application screen so you can add new products on the fly if you can't find what you're looking for without losing your place.</li>
+            <li class="rn-item"><span class="rn-item-dot enhancement"></span>The Weather Details page has been cleaned up — unnecessary icons removed for a cleaner, more focused view.</li>
+            <li class="rn-item"><span class="rn-item-dot enhancement"></span>Activity logging now supports multiple photos per entry, and a dedicated "Take Photo" button makes capturing your lawn's progress even easier.</li>
+          </ul>
+        </div>
+
+        <div class="rn-group">
+          <div class="rn-group-header">
+            <span class="rn-group-icon">⚙️</span>
+            <span class="rn-group-title improvement">UI Improvements</span>
+          </div>
+          <ul class="rn-items-list">
+            <li class="rn-item"><span class="rn-item-dot improvement"></span>The AI assistant (Greenkeeper) has been renamed — cleaner branding throughout the app.</li>
+            <li class="rn-item"><span class="rn-item-dot improvement"></span>The login screen now stays out of your way — you'll only see it when you actually need it.</li>
+            <li class="rn-item"><span class="rn-item-dot improvement"></span>AI chat responses no longer include distracting hashtags — conversations feel cleaner and more natural.</li>
+            <li class="rn-item"><span class="rn-item-dot improvement"></span>Password login is now the default on the login screen, making it faster to get into the app.</li>
+            <li class="rn-item"><span class="rn-item-dot improvement"></span>You can now set or update your password from your Profile — useful if you signed up via Google and want a password login option too.</li>
+            <li class="rn-item"><span class="rn-item-dot improvement"></span>The Growing Degree Days (GDD) card on the home screen has been streamlined — now shows just the two key numbers with a more compact layout.</li>
+            <li class="rn-item"><span class="rn-item-dot improvement"></span>The "Change Password" option has been moved to the top of Personal Info settings, right above Preferences — easier to find.</li>
+            <li class="rn-item"><span class="rn-item-dot improvement"></span>Walking speed for liquid applications now displays in gallons per 1,000 sq ft (GPA) instead of mph — a more meaningful unit for lawn care.</li>
+          </ul>
+        </div>
+
+        <div class="rn-group">
+          <div class="rn-group-header">
+            <span class="rn-group-icon">🐛</span>
+            <span class="rn-group-title bug-fix">Bug Fixes</span>
+          </div>
+          <ul class="rn-items-list">
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>Fixed an odd visual gap between the product selector and the Greenkeeper chat header.</li>
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>The product selector in AI chat wasn't working — fixed.</li>
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>Fixed an issue where the Save button was hidden behind the keyboard when editing a saved application plan.</li>
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>Cost efficiency calculations on the Inventory tab were returning incorrect values — now accurate.</li>
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>Fixed a layout issue where product search results were spread out awkwardly in the planning stage search bar.</li>
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>Journal date grouping is now timezone-aware — activities you log today will correctly show as "Today," not "Yesterday."</li>
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>The Growing Degree Days tooltip on the home screen wasn't launching — fixed.</li>
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>The Getting Started wizard no longer flashes briefly at the top of the home screen when the app first opens.</li>
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>Fixed a layout issue on the Profile page where padding was off after a collapse animation.</li>
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>Fixed an issue where the keyboard would cover the equipment input field during the onboarding wizard.</li>
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>Zone name text on the onboarding screen was spreading out incorrectly — now displays properly.</li>
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>Fixed an issue where the splash screen showed faint white lines at the top and bottom while loading.</li>
+          </ul>
+        </div>
+
+        <div class="rn-group">
+          <div class="rn-group-header">
+            <span class="rn-group-icon">🔧</span>
+            <span class="rn-group-title" style="color: rgba(247,244,237,0.4);">Under the Hood</span>
+          </div>
+          <ul class="rn-items-list">
+            <li class="rn-item"><span class="rn-item-dot" style="background: rgba(247,244,237,0.3)"></span>Consolidated three separate product form components into one shared form — keeping the codebase consistent and making future improvements easier to ship.</li>
+          </ul>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- BUILD 12 -->
+    <article class="build-entry" id="build-12">
+      <div class="build-header">
+        <div class="build-header-left">
+          <div class="build-number">Build 1.0.0 (12)</div>
+          <div class="build-meta">
+            <span class="build-date">April 18, 2026</span>
+            <span class="build-platform">iOS · TestFlight</span>
+          </div>
+          <p class="build-summary">Focused on photo capture, AI chat improvements, and a round of bug fixes surfaced by early testers.</p>
+        </div>
+      </div>
+
+      <div class="build-stats">
+        <div class="build-stat"><span class="build-stat-icon">✨</span><strong>5</strong>&nbsp;Enhancements</div>
+        <div class="build-stat"><span class="build-stat-icon">⚙️</span><strong>3</strong>&nbsp;UI Improvements</div>
+        <div class="build-stat"><span class="build-stat-icon">🐛</span><strong>6</strong>&nbsp;Bug Fixes</div>
+      </div>
+
+      <div class="build-items">
+
+        <div class="rn-group">
+          <div class="rn-group-header">
+            <span class="rn-group-icon">✨</span>
+            <span class="rn-group-title enhancement">Enhancements</span>
+          </div>
+          <ul class="rn-items-list">
+            <li class="rn-item"><span class="rn-item-dot enhancement"></span>You can now share AI conversations — great for saving advice or passing along lawn care tips.</li>
+            <li class="rn-item"><span class="rn-item-dot enhancement"></span>AI responses now display more slowly so you can read along as text streams in, rather than it all appearing at once.</li>
+            <li class="rn-item"><span class="rn-item-dot enhancement"></span>Added a photo option to the Application Wizard — you can now document your applications visually as you log them.</li>
+            <li class="rn-item"><span class="rn-item-dot enhancement"></span>Activity entries now support multiple photos, giving you a richer record of your lawn's progress over time.</li>
+            <li class="rn-item"><span class="rn-item-dot enhancement"></span>Added a "Take Photo" shortcut to the activity photo capture flow for faster in-the-moment logging.</li>
+          </ul>
+        </div>
+
+        <div class="rn-group">
+          <div class="rn-group-header">
+            <span class="rn-group-icon">⚙️</span>
+            <span class="rn-group-title improvement">UI Improvements</span>
+          </div>
+          <ul class="rn-items-list">
+            <li class="rn-item"><span class="rn-item-dot improvement"></span>Renamed the AI assistant to Greenkeeper — a more fitting name for your personal lawn care advisor.</li>
+            <li class="rn-item"><span class="rn-item-dot improvement"></span>Removed hashtags from AI chat responses for a cleaner, more readable experience.</li>
+            <li class="rn-item"><span class="rn-item-dot improvement"></span>Added a Growing Degree Days (GDD) tooltip — tap to learn what GDD means and how it helps you time lawn care applications.</li>
+          </ul>
+        </div>
+
+        <div class="rn-group">
+          <div class="rn-group-header">
+            <span class="rn-group-icon">🐛</span>
+            <span class="rn-group-title bug-fix">Bug Fixes</span>
+          </div>
+          <ul class="rn-items-list">
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>Fixed a visual gap between the product selector and the Greenkeeper chat header.</li>
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>The AI product selector was unresponsive — now works correctly.</li>
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>Fixed the Save button being hidden behind the keyboard when editing saved application plans.</li>
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>Cost efficiency figures on the Inventory tab were calculating incorrectly — resolved.</li>
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>Product search results in the planning stage were spreading out oddly in the search bar — fixed the layout.</li>
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>Fixed an issue where completing the new account setup flow left the dashboard unaware that yard zones, equipment, and products had been added — your data now appears immediately after onboarding.</li>
+            <li class="rn-item"><span class="rn-item-dot bug-fix"></span>Fixed the equipment input field being covered by the keyboard during the onboarding wizard.</li>
+          </ul>
+        </div>
+
+      </div>
+    </article>
+
+  </div><!-- /rn-feed -->
+</div><!-- /rn-layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="brand">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAB+UlEQVR4nO2Wv0sDMRTHP6s4iQ4OouAgOIiDgwTBQRAcBAdBEARBEARBEBwEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRA=" alt="TurfTrack">
+    <span>TurfTrack</span>
+  </div>
+  <p>© 2026 TurfTrack. Built for lawn enthusiasts.</p>
+</footer>
+
+<script>
+  // Highlight active sidebar link on scroll
+  const buildEntries = document.querySelectorAll('.build-entry');
+  const sidebarLinks = document.querySelectorAll('.rn-sidebar-list a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        sidebarLinks.forEach(link => {
+          link.classList.toggle('current', link.getAttribute('href') === `#${id}`);
+        });
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+
+  buildEntries.forEach(entry => observer.observe(entry));
+</script>
+
+</body>
+</html>
